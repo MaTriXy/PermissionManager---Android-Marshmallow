@@ -118,9 +118,13 @@ public class PermissionManager {
 
 
     public static void requestPermission(AppCompatActivity context,String explanation, PermissionsListener listener,@Permission String... permissions){
-        boolean permissionGranted = checkGroupPermissions(context,permissions);
-        int requestCode = -1;
-            switch (permissions[0]){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            listener.onAllow();
+        }
+        else {
+            boolean permissionGranted = checkGroupPermissions(context, permissions);
+            int requestCode = -1;
+            switch (permissions[0]) {
                 case Manifest.permission.READ_CALENDAR:
                 case Manifest.permission.WRITE_CALENDAR:
                     requestCode = RC_CALENDAR;
@@ -167,7 +171,8 @@ public class PermissionManager {
 
             }
 
-        requestPermission(context, permissionGranted,explanation,permissions,requestCode,listener);
+            requestPermission(context, permissionGranted, explanation, permissions, requestCode, listener);
+        }
     }
 
     private static boolean checkGroupPermissions(Activity context,String... permissions){
